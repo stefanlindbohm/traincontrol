@@ -1,0 +1,18 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ruby-termios (1.1.0)
+    uart (1.0.0)
+      ruby-termios
+
+PLATFORMS
+  arm64-darwin-22
+
+DEPENDENCIES
+  uart
+
+RUBY VERSION
+   ruby 3.2.2p53
+
+BUNDLED WITH
+   2.4.10
