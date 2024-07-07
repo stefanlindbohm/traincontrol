@@ -31,7 +31,7 @@ module P50X
       @uart.write(P50X_LEAD_CHAR + command.to_bytestring)
       command.read_response(@reader)
       $stderr.puts command.status if log
-      command
+      command.status
     end
 
     class Reader
