@@ -19,6 +19,7 @@ module P50X
 
     def initialize(serial_tty)
       @uart = UART.open(serial_tty, 19_200, '8N2')
+      @uart_mutex = Mutex.new
       @reader = Reader.new(@uart)
     end
 
@@ -28,8 +29,12 @@ module P50X
 
     def send(command, log: true)
       $stderr.print "#{command}... " if log
-      @uart.write(P50X_LEAD_CHAR + command.to_bytestring)
-      command.read_response(@reader)
+
+      @uart_mutex.synchronize do
+        @uart.write(P50X_LEAD_CHAR + command.to_bytestring)
+        command.read_response(@reader)
+      end
+
       $stderr.puts command.status if log
       command.status
     end
