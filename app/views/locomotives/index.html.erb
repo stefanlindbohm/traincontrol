@@ -1,0 +1,9 @@
+<h1>Locomotives</h1>
+
+<ul>
+  <%- @locomotives.each_with_index do |locomotive, i| %>
+  <li>
+    <%= link_to locomotive.address, locomotive_path(i) %>
+  </li>
+  <%- end %>
+</ul>

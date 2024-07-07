@@ -32,8 +32,18 @@ module Traincontrol
         @changed_attributes.clear
       end
 
+      def update_attributes(attributes)
+        attributes.each do |attribute, value|
+          next if %i[address speed direction lights f1 f2 f3 f4 f5 f6 f7 f8].exclude?(attribute)
+
+          send("#{attribute}=", value)
+        end
+      end
+
       def set_attributes(attributes)
         attributes.each do |attribute, value|
+          next if %i[address speed direction lights f1 f2 f3 f4 f5 f6 f7 f8].exclude?(attribute)
+
           instance_variable_set("@#{attribute}", value)
         end
       end

@@ -1,0 +1,130 @@
+<div class="mx-auto w-48 pt-4">
+  <h1>Locomotive #<%= @locomotive.address %></h1>
+
+  <dl>
+    <dt>Address</dt>
+    <dd><%= @locomotive.address %></dd>
+
+    <dt>Speed</dt>
+    <dd><%= @locomotive.speed %>/<%= @locomotive.speed_steps - 1 %></dd>
+  </dl>
+
+  <div class="relative w-24 h-96 border-1 border-black">
+    <div class="absolute h-full w-0.5 bg-gray-300 left-12 -ml-px rounded-full"></div>
+    <div id="drag-handle" class="absolute w-full h-8 rounded-full bg-black" style="top: 352px; touch-action: none;"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var currentRealSpeed = <%= @locomotive.speed %>;
+
+  function updateLocomotiveSpeed(speed) {
+    realSpeed = Math.round(speed * <%= @locomotive.speed_steps - 1 %>)
+    if (realSpeed == 1) { realSpeed = 0 }
+    if (realSpeed == currentRealSpeed) { return }
+
+    currentRealSpeed = realSpeed
+
+    sendLocomotiveUpdate(realSpeed)
+  }
+
+  const csrfToken = document.head.querySelector("[name~=csrf-token]").content
+  const url = "<%= locomotive_path(params[:id], format: :json) %>";
+  var requestPending = false;
+  var enqueuedSpeedUpdate = null;
+  async function sendLocomotiveUpdate(speed) {
+    if (requestPending) {
+      enqueuedSpeedUpdate = speed
+      return
+    }
+    requestPending = true
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          "X-CSRF-Token": csrfToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ locomotive: { speed: speed } })
+      });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+    requestPending = false
+    if (enqueuedSpeedUpdate !== null) {
+      const nextSpeed = enqueuedSpeedUpdate
+      enqueuedSpeedUpdate = null
+      sendLocomotiveUpdate(nextSpeed)
+    }
+  }
+
+  function addEventSimple(obj,evt,fn) {
+    if (obj.addEventListener)
+      obj.addEventListener(evt,fn,false);
+    else if (obj.attachEvent)
+      obj.attachEvent('on'+evt,fn);
+  }
+
+  function removeEventSimple(obj,evt,fn) {
+    if (obj.removeEventListener)
+      obj.removeEventListener(evt,fn,false);
+    else if (obj.detachEvent)
+      obj.detachEvent('on'+evt,fn);
+  }
+
+  dragDrop = {
+    initialMouseY: undefined,
+    startY: undefined,
+    draggedObject: undefined,
+    initElement: function (element) {
+      if (typeof element == 'string') {
+        element = document.getElementById(element);
+      }
+      element.onmousedown = dragDrop.startDragMouse;
+      element.ontouchstart = dragDrop.startDragMouse;
+    },
+    startDragMouse: function (e) {
+      dragDrop.startDrag(this);
+      var evt = e || window.event;
+      dragDrop.initialMouseY = (evt.clientY || evt.touches[0].clientY);
+      addEventSimple(document,'mousemove',dragDrop.dragMouse);
+      addEventSimple(document,'touchmove',dragDrop.dragMouse);
+      addEventSimple(document,'mouseup',dragDrop.releaseElement);
+      addEventSimple(document,'touchend',dragDrop.releaseElement);
+      return false;
+    },
+    startDrag: function (obj) {
+      if (dragDrop.draggedObject) {
+        dragDrop.releaseElement();
+      }
+      dragDrop.startY = obj.offsetTop;
+      dragDrop.draggedObject = obj;
+    },
+    dragMouse: function (e) {
+      var evt = e || window.event;
+      var dY = (evt.clientY || evt.touches[0].clientY) - dragDrop.initialMouseY;
+      dragDrop.setPosition(dY);
+      return false;
+    },
+    setPosition: function (dy) {
+      var y = dragDrop.startY + dy
+      if (y < 0) { y = 0 }
+      if (y > 352) { y = 352 }
+
+      dragDrop.draggedObject.style.top = y + 'px';
+
+      var speed = (352 - y) / 352
+      updateLocomotiveSpeed(speed)
+    },
+    releaseElement: function() {
+      removeEventSimple(document,'mousemove',dragDrop.dragMouse);
+      removeEventSimple(document,'mouseup',dragDrop.releaseElement);
+      dragDrop.draggedObject = null;
+    }
+  }
+
+  dragDrop.initElement('drag-handle');
+</script>
