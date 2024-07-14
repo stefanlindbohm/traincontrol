@@ -213,6 +213,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  concurrent-ruby
   cssbundling-rails
   debug
   jbuilder

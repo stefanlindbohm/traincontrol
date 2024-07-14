@@ -24,8 +24,10 @@ class LocomotivesController < ApplicationController
 
   def locomotive_params
     params.require(:locomotive)
-          .permit(:speed)
+          .permit(:speed, :direction, :lights)
           .to_hash
           .transform_keys(&:to_sym)
+          .tap { _1[:direction] = _1[:direction].to_sym if _1.key?(:direction) }
+          .tap { _1[:lights] = _1[:lights].to_i.positive? if _1.key?(:lights) }
   end
 end

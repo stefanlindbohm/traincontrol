@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 ruby File.read('.ruby-version').strip
 
 # Traincontrol dependencies
+gem 'concurrent-ruby'
 gem 'uart'
 
 # Rails
