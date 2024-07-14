@@ -18,17 +18,11 @@ class TraincontrolUniverse
   end
 
   def load_locomotives(addresses)
-    addresses.each do |address|
-      @locomotives << @intellibox.find_locomotive_decoder(address)
-    end
+    @locomotives = addresses.map { @intellibox.find_locomotive_decoder(_1) }
   end
 
   def update
     @intellibox.update
-  end
-
-  def close
-    @intellibox.close
   end
 end
 
