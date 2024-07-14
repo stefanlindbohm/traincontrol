@@ -8,9 +8,11 @@ module Traincontrol
       # TODO: This is here temporarily -- the Traincontrol module should not be dependent on Rails stuff
       include Turbo::Broadcastable
 
+      ATTRIBUTES = %i[speed direction emergency_stop lights f1 f2 f3 f4 f5 f6 f7 f8].freeze
       DEFAULTS = {
         speed: 0,
         direction: :forward,
+        emergency_stop: false,
         lights: false,
         f1: false,
         f2: false,
@@ -22,9 +24,9 @@ module Traincontrol
         f8: false
       }.freeze
 
-      attr_reader :address, :speed_steps, :speed, :direction, :lights, :f1, :f2, :f3, :f4, :f5, :f6, :f7, :f8
+      attr_reader :address, :speed_steps, *ATTRIBUTES
 
-      def initialize(address, speed_steps: 128)
+      def initialize(address, speed_steps: 127)
         @address = address
         @speed_steps = speed_steps
         @changed_attributes = Set.new
@@ -46,7 +48,7 @@ module Traincontrol
 
       def update_attributes(attributes)
         attributes.each do |attribute, value|
-          next if %i[address speed direction lights f1 f2 f3 f4 f5 f6 f7 f8].exclude?(attribute)
+          next if ATTRIBUTES.exclude?(attribute)
 
           send("#{attribute}=", value)
         end
@@ -54,13 +56,13 @@ module Traincontrol
 
       def set_attributes(attributes)
         attributes.each do |attribute, value|
-          next if %i[address speed direction lights f1 f2 f3 f4 f5 f6 f7 f8].exclude?(attribute)
+          next if ATTRIBUTES.exclude?(attribute)
 
           instance_variable_set("@#{attribute}", value)
         end
       end
 
-      %i[address speed direction lights f1 f2 f3 f4 f5 f6 f7 f8].each do |attribute|
+      ATTRIBUTES.each do |attribute|
         define_method "#{attribute}=" do |new_value|
           return if instance_variable_get("@#{attribute}") == new_value
 

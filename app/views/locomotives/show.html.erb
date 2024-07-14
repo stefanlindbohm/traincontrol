@@ -27,7 +27,7 @@
     <div class="grow flex-1">
 
       <%= form_with url: locomotive_path, method: :put, scope: :locomotive, html: { 'data-controller': 'form-throttler' } do |f| %>
-        <div data-controller="slider" data-slider-max-value="127">
+        <div data-controller="slider" data-slider-max-value="<%= @locomotive.speed_steps - 1 %>">
           <%= f.hidden_field :speed, 'data-slider-target': 'field', 'data-action': 'form-throttler#submit turbo:morph-element->slider#updateFromField' %>
 
           <div id="speed-handle" data-turbo-permanent class="mx-auto relative w-24 h-96 border-1 border-black">

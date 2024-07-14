@@ -68,6 +68,7 @@ module Traincontrol
             decoder.speed,
             decoder.direction,
             lights: decoder.lights,
+            emergency_stop: decoder.emergency_stop,
             functions: { f1: decoder.f1, f2: decoder.f2, f3: decoder.f3, f4: decoder.f4 }
           )
         )

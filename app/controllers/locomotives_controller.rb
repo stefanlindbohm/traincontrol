@@ -27,6 +27,7 @@ class LocomotivesController < ApplicationController
           .permit(:speed, :direction, :lights)
           .to_hash
           .transform_keys(&:to_sym)
+          .tap { _1[:speed] = _1[:speed].to_i if _1.key?(:speed) }
           .tap { _1[:direction] = _1[:direction].to_sym if _1.key?(:direction) }
           .tap { _1[:lights] = _1[:lights].to_i.positive? if _1.key?(:lights) }
   end

@@ -5,13 +5,14 @@ module P50X
     class XLok < Base
       CODE_POINT = 0x80.chr
 
-      attr_reader :address, :force, :speed, :direction, :lights, :functions
+      attr_reader :address, :force, :emergency_stop, :speed, :direction, :lights, :functions
 
-      def initialize(address, speed, direction, lights:, functions: nil, force: false)
+      def initialize(address, speed, direction, emergency_stop:, lights:, functions: nil, force: false)
         super()
 
         @address = address
         @force = force
+        @emergency_stop = emergency_stop
         @speed = speed
         @direction = direction
         @lights = lights
@@ -35,7 +36,16 @@ module P50X
         options_byte |= 0x02 if functions&.[](:f2)
         options_byte |= 0x01 if functions&.[](:f1)
 
-        [@address, @speed, options_byte].pack('SCC')
+        speed_byte =
+          if emergency_stop
+            1
+          elsif speed.zero?
+            0
+          else
+            speed + 1
+          end
+
+        [@address, speed_byte, options_byte].pack('SCC')
       end
     end
   end

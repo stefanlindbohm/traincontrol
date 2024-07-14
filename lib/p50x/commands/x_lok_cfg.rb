@@ -45,7 +45,7 @@ module P50X
             when 3
               :fmz
             end,
-          speed_steps: bytes[1]
+          speed_steps: bytes[1] - 1
         }.freeze
       end
     end

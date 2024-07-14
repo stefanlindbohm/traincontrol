@@ -35,7 +35,8 @@ module P50X
       def response_attributes(bytes)
         {
           direction: bytes[1] & 0x20 == 0x20 ? :forward : :reverse,
-          speed: bytes[2].to_i,
+          emergency_stop: bytes[2] == 1,
+          speed: bytes[2] <= 1 ? 0 : bytes[2] - 1,
           lights: bytes[1] & 0x10 == 0x10,
           f1: bytes[1] & 0x01 == 0x01,
           f2: bytes[1] & 0x02 == 0x02,
