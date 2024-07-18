@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'p50x/commands/base'
+require_relative 'p50x/commands/x_event'
 require_relative 'p50x/commands/x_evt_lok'
 require_relative 'p50x/commands/x_halt'
 require_relative 'p50x/commands/x_lok'

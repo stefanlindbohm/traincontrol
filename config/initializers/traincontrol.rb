@@ -26,4 +26,6 @@ class TraincontrolUniverse
   end
 end
 
-TraincontrolUniverse.instance.load_locomotives([3])
+Rails.application.config.after_initialize do
+  TraincontrolUniverse.instance.load_locomotives([3])
+end

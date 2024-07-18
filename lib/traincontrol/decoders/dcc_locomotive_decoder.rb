@@ -40,10 +40,7 @@ module Traincontrol
 
       def clear_changes
         @changed_attributes.clear
-        # TODO: This is here temporarily -- the Traincontrol module should not be dependent on app or Rails stuff
-        @broadcast_throttler.throttle do
-          broadcast_refresh
-        end
+        broadcast_refresh_throttled
       end
 
       def update_attributes(attributes)
@@ -60,6 +57,8 @@ module Traincontrol
 
           instance_variable_set("@#{attribute}", value)
         end
+
+        broadcast_refresh_throttled
       end
 
       ATTRIBUTES.each do |attribute|
@@ -68,6 +67,16 @@ module Traincontrol
 
           instance_variable_set("@#{attribute}", new_value)
           @changed_attributes << attribute
+        end
+      end
+
+      private
+
+      # TODO: This is here temporarily -- the Traincontrol module should not be
+      # dependent on app or Rails stuff
+      def broadcast_refresh_throttled
+        @broadcast_throttler.throttle do
+          broadcast_refresh
         end
       end
     end

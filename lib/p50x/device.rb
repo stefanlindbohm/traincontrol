@@ -27,16 +27,22 @@ module P50X
       @uart.close
     end
 
-    def send(command, log: true)
-      $stderr.print "#{command}... " if log
+    def send(commands, log: true)
+      commands = [commands] unless commands.is_a?(Array)
 
       @uart_mutex.synchronize do
-        @uart.write(P50X_LEAD_CHAR + command.to_bytestring)
-        command.read_response(@reader)
-      end
+        commands.each do |command|
+          $stderr.print "#{command}... " if log
+          @uart.write(P50X_LEAD_CHAR + command.to_bytestring)
+        end
 
-      $stderr.puts command.status if log
-      command.status
+        commands.each do |command|
+          command.read_response(@reader)
+          $stderr.print "#{command.status} " if log
+        end
+
+        $stderr.puts if log
+      end
     end
 
     class Reader
