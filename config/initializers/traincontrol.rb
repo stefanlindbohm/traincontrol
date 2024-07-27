@@ -24,5 +24,7 @@ class TraincontrolUniverse
 end
 
 Rails.application.config.after_initialize do
+  next unless defined?(::Rails::Server)
+
   TraincontrolUniverse.instance.load_locomotives([3])
 end
