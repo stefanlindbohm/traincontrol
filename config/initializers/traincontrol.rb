@@ -6,7 +6,7 @@ class TraincontrolUniverse
   attr_reader :locomotives
 
   def initialize
-    @intellibox = Traincontrol::Adapters::P50XAdapter.new('/dev/tty.usbserial-140')
+    @intellibox = Traincontrol::Adapters::P50XAdapter.new('/dev/ttyUSB0')
     @locomotives = []
 
     at_exit do
