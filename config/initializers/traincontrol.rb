@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/p50x'
-require_relative '../../lib/traincontrol'
-
 class TraincontrolUniverse
   include Singleton
 
