@@ -14,6 +14,10 @@ class TraincontrolUniverse
     end
   end
 
+  def feedback_network
+    @intellibox.s88_feedback_network
+  end
+
   def load_locomotives(addresses)
     @locomotives = addresses.map { @intellibox.find_locomotive_decoder(_1) }
   end
@@ -27,4 +31,8 @@ Rails.application.config.after_initialize do
   next unless defined?(::Rails::Server)
 
   TraincontrolUniverse.instance.load_locomotives([3])
+  # @sensor_timer = SensorTimer.new(0.541,
+  #                                 TraincontrolUniverse.instance.feedback_network.contacts[0],
+  #                                 TraincontrolUniverse.instance.feedback_network.contacts[1],
+  #                                 TraincontrolUniverse.instance.locomotives[0])
 end
