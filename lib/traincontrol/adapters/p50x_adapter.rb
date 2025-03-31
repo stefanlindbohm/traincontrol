@@ -43,10 +43,15 @@ module Traincontrol
         return if @event_check_task&.pending?
 
         @event_check_start_time = Time.now
-        check_events
-      rescue => e
-        warn e
-      ensure
+        stop = false
+        begin
+          check_events
+        rescue Concurrent::CancelledOperationError
+          stop = true
+        end
+
+        return if stop
+
         next_invocation = EVENT_CHECK_INTERVAL - (Time.now - @event_check_start_time)
 
         if next_invocation <= 0
@@ -56,6 +61,9 @@ module Traincontrol
             check_events_recursive
           end
         end
+      rescue => e
+        warn e
+        warn e.backtrace
       end
 
       def check_events
