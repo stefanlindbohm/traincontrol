@@ -75,6 +75,8 @@ module Traincontrol
         case command
         when P50X::Commands::XEvtLok
           command.response.each { process_locomotive_event_attributes(_1) }
+        when P50X::Commands::XStatus
+          warn command.response
         end
       end
 

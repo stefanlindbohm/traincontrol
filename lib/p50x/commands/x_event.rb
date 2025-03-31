@@ -38,9 +38,9 @@ module P50X
 
         # Commands requested by the P50X device that we support
         requested_commands << XEvtLok if first & 0x01 == 0x01
-        unsupported_requested_commands << :sensors if first & 0x04 == 0x04 # TODO: XEvtSen
+        requested_commands << XEvtSen if first & 0x04 == 0x04
+        requested_commands << XStatus if second & 0x40 == 0x40
         unsupported_requested_commands << :turnouts if first & 0x20 == 0x20 # TODO: XEvtTrn
-        unsupported_requested_commands << :issue_xstatus if second & 0x40 == 0x40 # TODO: XStatus
 
         # Commands requested by the P50X device that we don't support, no
         # action is possible but reporting might help debugging
