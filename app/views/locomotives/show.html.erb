@@ -41,7 +41,24 @@
     <div class="grow flex-1">
 
       <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
-        <label class="inline-block w-12 h-12 bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+        <div class="grid gap-2 grid-cols-4">
+        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+          <%= f.check_box :f1, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+          F1
+        </label>
+        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+          <%= f.check_box :f2, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+          F2
+        </label>
+        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+          <%= f.check_box :f3, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+          F3
+        </label>
+        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+          <%= f.check_box :f4, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+          F4
+        </label>
+        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
           <%= f.check_box :lights, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
           Lights
         </label>
