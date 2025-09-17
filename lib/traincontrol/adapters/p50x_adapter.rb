@@ -8,9 +8,12 @@ module Traincontrol
 
       EVENT_CHECK_INTERVAL = 0.1
 
-      def initialize(serial_tty)
+      attr_reader :s88_feedback_network
+
+      def initialize(serial_tty, s88_contacts: 0)
         @device = P50X::Device.new(serial_tty)
         @locomotive_decoders = {}
+        @s88_feedback_network = Traincontrol::Decoders::S88FeedbackNetwork.new(s88_contacts)
         @event_check_task = nil
 
         check_events_recursive
@@ -83,6 +86,8 @@ module Traincontrol
         case command
         when P50X::Commands::XEvtLok
           command.response.each { process_locomotive_event_attributes(_1) }
+        when P50X::Commands::XEvtSen
+          process_sensor_event_attributes(command.response)
         when P50X::Commands::XStatus
           warn command.response
         end
@@ -93,6 +98,10 @@ module Traincontrol
 
         decoder = @locomotive_decoders[attributes[:address]]
         decoder.set_attributes(attributes)
+      end
+
+      def process_sensor_event_attributes(attributes)
+        s88_feedback_network.set_contacts(attributes)
       end
 
       def lookup_locomotive_decoder(address)
