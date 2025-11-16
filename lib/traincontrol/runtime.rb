@@ -12,11 +12,11 @@ module Traincontrol
       @command_stations = {}
       @locomotives = {}
 
-      at_exit { exit }
+      at_exit { stop }
       @run_loop = RunLoop.new(RUN_LOOP_INTERVAL) { tick }
     end
 
-    def exit
+    def stop
       @run_loop.stop
       @command_stations.each_value(&:close)
       @command_stations = {}

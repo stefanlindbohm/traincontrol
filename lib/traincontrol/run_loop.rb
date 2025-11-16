@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Traincontrol
+  # RunLoop calls a block on a separate thread at a given interval.
   class RunLoop
     attr_reader :interval, :stopped
 
@@ -26,7 +27,7 @@ module Traincontrol
     def tick
       return if @current_task&.pending? || stopped
 
-      @current_start_time = Time.now
+      @current_start_time = Time.now.to_f
       @block.call
 
       return if stopped
@@ -41,7 +42,7 @@ module Traincontrol
     end
 
     def next_invocation_time
-      next_invocation = interval - (Time.now - current_start_time)
+      next_invocation = interval - (Time.now.to_f - current_start_time)
       return 0 if next_invocation <= 0
 
       next_invocation

@@ -1,0 +1,78 @@
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-rspec_rails
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - bin/*
+    - vendor/**/*
+
+# Metrics
+
+Metrics/BlockLength:
+  AllowedMethods:
+    - class_methods
+  Exclude:
+    - Guardfile
+    - config/**/*
+
+Metrics/ClassLength:
+  Exclude:
+    - app/models/**/*
+    - lib/**/*
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+Metrics/MethodLength:
+  Max: 30
+
+# Disabled metrics - these all have frequent cases of valid exceptions, and a
+# too complex method is anyway easy to spot in review.
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# Style
+
+Style/Documentation:
+  Include:
+    - app/models/**/*
+    - lib/**/*
+
+Style/RedundantParentheses:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/GlobalVars:
+  AllowedVariables:
+    - $traincontrol
+
+# Rails
+
+Rails/Delegate:
+  Include:
+    - app/**/*
+
+# RSpec
+
+RSpec/ExampleLength:
+  Max: 30
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/Dialect:
+  Enabled:
+    - feature
+    - scenario

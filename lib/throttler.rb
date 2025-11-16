@@ -14,14 +14,14 @@ class Throttler
 
   def throttle(&block)
     @mutex.synchronize do
-      if @last_invocation.nil? || (Time.now - @last_invocation) > @interval
+      if @last_invocation.nil? || (Time.now.to_f - @last_invocation) > @interval
         block.call
-        @last_invocation = Time.now
+        @last_invocation = Time.now.to_f
       else
-        delay = @last_invocation + @interval - Time.now
+        delay = @last_invocation + @interval - Time.now.to_f
         scheduled_task&.cancel unless scheduled_task&.complete?
         @scheduled_task = Concurrent::ScheduledTask.execute(delay) do
-          @last_invocation = Time.now
+          @last_invocation = Time.now.to_f
           block.call
         end
       end
