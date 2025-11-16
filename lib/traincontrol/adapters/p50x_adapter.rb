@@ -6,14 +6,9 @@ module Traincontrol
       class UnexpectedStatusError < StandardError; end
       class UnsupportedProtocolError < StandardError; end
 
-      EVENT_CHECK_INTERVAL = 0.1
-
       def initialize(serial_tty)
         @device = P50X::Device.new(serial_tty)
         @locomotive_decoders = {}
-        @event_check_task = nil
-
-        check_events_recursive
       end
 
       def close
@@ -37,35 +32,6 @@ module Traincontrol
         end
       end
 
-      private
-
-      def check_events_recursive
-        return if @event_check_task&.pending?
-
-        @event_check_start_time = Time.now
-        stop = false
-        begin
-          check_events
-        rescue Concurrent::CancelledOperationError
-          stop = true
-        end
-
-        return if stop
-
-        next_invocation = EVENT_CHECK_INTERVAL - (Time.now - @event_check_start_time)
-
-        if next_invocation <= 0
-          check_events_recursive
-        else
-          @event_check_task = Concurrent::ScheduledTask.execute(next_invocation) do
-            check_events_recursive
-          end
-        end
-      rescue => e
-        warn e
-        warn e.backtrace
-      end
-
       def check_events
         event_command = P50X::Commands::XEvent.new
         @device.send(event_command, log: false)
@@ -78,6 +44,8 @@ module Traincontrol
         @device.send(detail_commands)
         detail_commands.each { process_event_command(_1) }
       end
+
+      private
 
       def process_event_command(command)
         case command

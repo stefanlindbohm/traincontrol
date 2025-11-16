@@ -4,14 +4,14 @@ class LocomotivesController < ApplicationController
   before_action :set_locomotive, only: %i[show update]
 
   def index
-    @locomotives = TraincontrolUniverse.instance.locomotives
+    @locomotives = $traincontrol.locomotives
   end
 
   def show; end
 
   def update
     @locomotive.update_attributes(locomotive_params)
-    TraincontrolUniverse.instance.update
+    $traincontrol.update
 
     head :ok
   end
@@ -19,7 +19,7 @@ class LocomotivesController < ApplicationController
   private
 
   def set_locomotive
-    @locomotive = TraincontrolUniverse.instance.locomotives[params[:id].to_i]
+    @locomotive = $traincontrol.locomotives[params[:id].to_i]
   end
 
   def locomotive_params

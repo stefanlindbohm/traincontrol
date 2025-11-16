@@ -1,30 +1,15 @@
 # frozen_string_literal: true
 
-class TraincontrolUniverse
-  include Singleton
-
-  attr_reader :locomotives
-
-  def initialize
-    @intellibox = Traincontrol::Adapters::P50XAdapter.new('/dev/ttyUSB0')
-    @locomotives = []
-
-    at_exit do
-      @intellibox.close
-    end
-  end
-
-  def load_locomotives(addresses)
-    @locomotives = addresses.map { @intellibox.find_locomotive_decoder(_1) }
-  end
-
-  def update
-    @intellibox.update
-  end
-end
-
 Rails.application.config.after_initialize do
   next unless defined?(::Rails::Server)
 
-  TraincontrolUniverse.instance.load_locomotives([3])
+  $traincontrol&.exit
+  $traincontrol = Traincontrol::Runtime.new
+  $traincontrol.register_command_station(
+    :intellibox,
+    Traincontrol::Adapters::P50XAdapter.new('/dev/ttyUSB0')
+  )
+  [3].each do |address|
+    $traincontrol.register_locomotive(:intellibox, address)
+  end
 end
