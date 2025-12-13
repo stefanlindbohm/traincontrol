@@ -17,6 +17,7 @@ gem 'jsbundling-rails'
 gem 'propshaft'
 gem 'stimulus-rails'
 gem 'turbo-rails'
+gem 'view_component'
 
 # Environment
 gem 'bootsnap', require: false

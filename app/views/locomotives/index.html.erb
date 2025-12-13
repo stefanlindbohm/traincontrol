@@ -1,14 +1,20 @@
-<div class="mx-auto w-full max-w-lg p-4 flex flex-col space-y-4">
-  <h1 class="p-1 font-medium text-center">Traincontrol</h1>
+<%= render ApplicationFrameComponent.new(
+             title: 'Locomotives',
+             current_tab: :driver,
+             container_class: 'bg-stone-200'
+           ) do %>
 
-  <div class="flex flex-col space-y-1">
-    <label class="uppercase text-sm font-medium">Locomotives</label>
-    <ul class="border-y xs:border-x -mx-4 xs:mx-0 border-gray-200 xs:rounded-md divide-y divide-gray-200">
+  <div class="p-4">
+
+    <h2 class="uppercase text-sm font-medium mb-2">All</h2>
+    <ul class="grid grid-cols-min grid-cols-[repeat(auto-fill,minmax(min(12rem,40%),1fr))] gap-2">
       <%- @locomotives.each_with_index do |locomotive, i| %>
-      <li>
-        <%= link_to locomotive.address, locomotive_path(i), class: "block px-4 py-1" %>
-      </li>
+        <li class="min-w-36">
+          <%= link_to locomotive.address, locomotive_path(i), class: "block p-2 bg-white rounded" %>
+        </li>
       <%- end %>
     </ul>
+
   </div>
-</div>
+
+<%- end %>

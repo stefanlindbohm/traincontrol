@@ -23,6 +23,8 @@ module Traincontrol
           decoder.clear_changes
         end
       end
+
+      def check_events; end
     end
   end
 end

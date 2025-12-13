@@ -1,69 +1,75 @@
 <%- turbo_refreshes_with(method: :morph, scroll: :preserve) %>
 <%= turbo_stream_from @locomotive %>
+<%- content_for(:title, "Locomotive ##{@locomotive.address}") %>
 
-<div class="mx-auto w-full max-w-lg p-4 flex flex-col space-y-4">
-  <div class="flex space-x-2">
-    <h1 class="grow p-1 font-medium text-center">Locomotive #<%= @locomotive.address %></h1>
-    <%= link_to 'Done', root_path, class: 'py-1 px-2 bg-gray-200 rounded-md' %>
-  </div>
+<%= render ApplicationFrameComponent.new(
+             title: "Locomotive ##{@locomotive.address}",
+             current_tab: :driver,
+             back_url: root_path,
+             container_class: 'bg-stone-200'
+           ) do %>
 
-  <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
-    <div class="flex flex-col space-y-1">
-      <label class="uppercase text-sm font-medium">Driving cab</label>
-      <div class="flex w-full space-x-2">
-        <label class="inline-block grow h-12 bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.radio_button :direction, :forward, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          A
-        </label>
-        <label class="inline-block grow h-12 bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.radio_button :direction, :reverse, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          B
-        </label>
+  <div class="mx-auto w-full max-w-lg p-4 flex flex-col space-y-4">
+    <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
+      <div class="flex flex-col space-y-1">
+        <label class="uppercase text-sm font-medium">Direction</label>
+        <div class="flex w-full space-x-2">
+          <label class="inline-block grow h-12 bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+            <%= f.radio_button :direction, :forward, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+            A
+          </label>
+          <label class="inline-block grow h-12 bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+            <%= f.radio_button :direction, :reverse, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+            B
+          </label>
+        </div>
+      </div>
+    <%- end %>
+
+    <div class="flex space-x-2">
+      <div class="grow flex-1">
+
+        <%= form_with url: locomotive_path, method: :put, scope: :locomotive, html: { 'data-controller': 'form-throttler' } do |f| %>
+          <div data-controller="slider" data-slider-max-value="<%= @locomotive.speed_steps - 1 %>">
+            <%= f.hidden_field :speed, 'data-slider-target': 'field', 'data-action': 'form-throttler#submit turbo:morph-element->slider#updateFromField' %>
+
+            <div id="speed-handle" data-turbo-permanent class="mx-auto relative w-24 h-96 border-1 border-black">
+              <div class="absolute h-full w-0.5 bg-stone-400 left-12 -ml-px rounded-full"></div>
+              <div data-slider-target="handle" class="absolute w-full h-8 rounded-full bg-black" style="top: 352px; touch-action: none;"></div>
+            </div>
+          </div>
+        <% end %>
+
+      </div>
+      <div class="grow flex-1">
+
+        <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
+          <div class="grid gap-2 grid-cols-4">
+            <label class="bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+              <%= f.check_box :f1, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+              F1
+            </label>
+            <label class="bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+              <%= f.check_box :f2, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+              F2
+            </label>
+            <label class="bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+              <%= f.check_box :f3, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+              F3
+            </label>
+            <label class="bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+              <%= f.check_box :f4, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+              F4
+            </label>
+            <label class="bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
+              <%= f.check_box :lights, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+              Lights
+            </label>
+          </div>
+        <%- end %>
+
       </div>
     </div>
-  <%- end %>
-
-  <div class="flex space-x-2">
-    <div class="grow flex-1">
-
-      <%= form_with url: locomotive_path, method: :put, scope: :locomotive, html: { 'data-controller': 'form-throttler' } do |f| %>
-        <div data-controller="slider" data-slider-max-value="<%= @locomotive.speed_steps - 1 %>">
-          <%= f.hidden_field :speed, 'data-slider-target': 'field', 'data-action': 'form-throttler#submit turbo:morph-element->slider#updateFromField' %>
-
-          <div id="speed-handle" data-turbo-permanent class="mx-auto relative w-24 h-96 border-1 border-black">
-            <div class="absolute h-full w-0.5 bg-gray-300 left-12 -ml-px rounded-full"></div>
-            <div data-slider-target="handle" class="absolute w-full h-8 rounded-full bg-black" style="top: 352px; touch-action: none;"></div>
-          </div>
-        </div>
-      <% end %>
-
-    </div>
-    <div class="grow flex-1">
-
-      <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
-        <div class="grid gap-2 grid-cols-4">
-        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.check_box :f1, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          F1
-        </label>
-        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.check_box :f2, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          F2
-        </label>
-        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.check_box :f3, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          F3
-        </label>
-        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.check_box :f4, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          F4
-        </label>
-        <label class="bg-gray-200 text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
-          <%= f.check_box :lights, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
-          Lights
-        </label>
-      <%- end %>
-
-    </div>
   </div>
-</div>
+
+<%- end %>
