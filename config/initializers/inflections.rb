@@ -8,6 +8,7 @@
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'P50X'
   inflect.acronym 'DCC'
+  inflect.acronym 'SVG'
   # inflect.plural /^(ox)$/i, "\\1en"
   # inflect.singular /^(ox)en/i, "\\1"
   # inflect.irregular "person", "people"

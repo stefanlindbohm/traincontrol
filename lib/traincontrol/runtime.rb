@@ -36,6 +36,10 @@ module Traincontrol
       @locomotives.values
     end
 
+    def update
+      @command_stations.each_value(&:update)
+    end
+
     private
 
     def tick

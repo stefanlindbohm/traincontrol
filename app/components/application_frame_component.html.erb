@@ -1,0 +1,102 @@
+<div class="flex flex-col min-h-screen <%= @container_class %>">
+  <div class="sticky top-0">
+    <nav class="z-50 bg-gradient-to-b from-white/80 to-stone-50/80 backdrop-blur shadow-center pt-[env(safe-area-inset-top)] px-[env(safe-area-inset-left)]">
+      <div class="h-16 px-4 flex items-center">
+
+        <div class="hidden md:block pr-4 mr-4 border-r border-stone-300">
+          <ul class="h-8 flex space-x-0.5 bg-stone-200 rounded">
+            <%- navigation_items.each do |(tab, title, icon, url, _)| %>
+              <%- if tab == @current_tab %>
+                <li class="text-blue-800 bg-blue-200 rounded">
+                  <%= link_to url, class: 'h-8 px-2 flex items-center', title: do %>
+                    <%= helpers.inline_svg_tag(icon, class: 'size-5') %>
+                  <%- end %>
+                </li>
+              <%- else %>
+                <li class="text-gray-600">
+                  <%= link_to url, class: 'h-8 px-2 flex items-center', title: do %>
+                    <%= helpers.inline_svg_tag(icon, class: 'size-5') %>
+                  <%- end %>
+                </li>
+              <%- end %>
+            <%- end %>
+          </ul>
+        </div>
+
+        <%- if @back_url.present? %>
+          <%= link_to @back_url, class: 'mr-4 flex items-center justify-center size-8 bg-stone-200 rounded' do %>
+            <%= helpers.inline_svg_tag('heroicons/chevron-left') %>
+          <%- end %>
+        <%- elsif @current_tab == :setup && controller_path != 'setup/navigation' %>
+          <%= link_to setup_root_path, class: 'md:hidden mr-4 flex items-center justify-center size-8 bg-stone-200 rounded' do %>
+            <%= helpers.inline_svg_tag('heroicons/chevron-left') %>
+          <%- end %>
+        <%- end %>
+
+        <div class="grow">
+          <h1 class="font-bold"><%= @title %></h1>
+        </div>
+
+      </div>
+    </nav>
+  </div>
+
+  <div class="grow flex px-[env(safe-area-inset-left)]">
+    <%- if @current_tab == :setup %>
+      <div class="<%= 'hidden md:block ' unless @show_subnavigation_on_small_screens %>w-full md:w-60">
+        <nav class="min-h-full bg-white md:shadow-center py-4 ml-[calc(0px-env(safe-area-inset-left))] pl-[env(safe-area-inset-left)]">
+          <ul class="mx-2 border-t border-b border-stone-200 md:border-0 divide-y divide-stone-200">
+            <%- [
+                  ['General', setup_general_settings_path, '/setup/general']
+                ].each do |(title, url, base_url)| %>
+              <%- if request.path.start_with?(base_url) %>
+                <li>
+                  <%= link_to url, class: 'p-2 md:bg-blue-800 md:text-white md:rounded flex items-center justify-between' do %>
+                    <span><%= title %></span>
+                    <%= helpers.inline_svg_tag 'heroicons/chevron-right', class: 'size-6 md:hidden' %>
+                  <%- end %>
+                </li>
+              <%- else %>
+                <li>
+                  <%= link_to url, class: 'p-2 md:hover:bg-stone-200 md:rounded flex items-center justify-between' do %>
+                    <span><%= title %></span>
+                    <%= helpers.inline_svg_tag 'heroicons/chevron-right', class: 'size-6 md:hidden' %>
+                  <%- end %>
+                </li>
+              <%- end %>
+            <%- end %>
+          </ul>
+        </nav>
+      </div>
+    <%- end %>
+    <div class="grow">
+      <%= content %>
+    </div>
+  </div>
+
+  <div class="md:hidden sticky bottom-0">
+    <nav class="bg-white/80 backdrop-blur shadow-center overflow-hidden pb-[env(safe-area-inset-bottom)]">
+      <div class="h-14 px-1 flex items-center">
+        <ul class="h-12 w-full flex justify-around space-x-0.5">
+          <%- navigation_items.each do |(tab, title, icon, url, tab_bar_url)| %>
+            <%- if tab == @current_tab %>
+              <li class="text-blue-800">
+                <%= link_to (tab_bar_url || url), class: 'size-12 flex flex-col items-center justify-center space-y-px' do %>
+                  <%= helpers.inline_svg_tag(icon, class: 'size-6') %>
+                  <span class="text-xs"><%= title %></span>
+                <%- end %>
+              </li>
+            <%- else %>
+              <li class="text-gray-600">
+                <%= link_to (tab_bar_url || url), class: 'size-12 flex flex-col items-center justify-center space-y-px' do %>
+                  <%= helpers.inline_svg_tag(icon, class: 'size-6') %>
+                  <span class="text-xs"><%= title %></span>
+                <%- end %>
+              </li>
+            <%- end %>
+          <%- end %>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
