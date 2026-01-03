@@ -3,13 +3,6 @@
 Rails.application.config.after_initialize do
   next unless defined?(Rails::Server)
 
-  $traincontrol&.exit
-  $traincontrol = Traincontrol::Runtime.new
-  $traincontrol.register_command_station(
-    :intellibox,
-    Traincontrol::Adapters::P50XAdapter.new('/dev/ttyUSB0')
-  )
-  [3].each do |address|
-    $traincontrol.register_locomotive(:intellibox, address)
-  end
+  # Trigger creation of bridge and thus start of runtime
+  TraincontrolBridge.instance
 end

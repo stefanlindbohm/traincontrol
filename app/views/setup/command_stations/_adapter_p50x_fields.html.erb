@@ -1,0 +1,15 @@
+<%= render InputComponent.new(label: 'Serial port') do %>
+  <%- form.fields_for :adapter_options do |options_fields| %>
+    <%= options_fields.select(
+          'serial_port',
+          adapter_configuration.available_serial_ports.map { |id, name| [name, id] },
+          {
+            include_blank: true,
+            selected: form.object.adapter_options['serial_port']
+          },
+          {
+            class: 'w-full'
+          }
+        ) %>
+  <%- end %>
+<%- end %>

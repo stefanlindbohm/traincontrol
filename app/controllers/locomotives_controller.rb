@@ -4,14 +4,31 @@ class LocomotivesController < ApplicationController
   before_action :set_locomotive, only: %i[show update]
 
   def index
-    @locomotives = $traincontrol.locomotives
+    @locomotives = Locomotive.order(:name).all
   end
 
   def show; end
 
+  def new
+    @locomotive = Locomotive.new(command_station: CommandStation.first)
+  end
+
+  def create
+    @locomotive = Locomotive.new(new_locomotive_params)
+
+    unless @locomotive.save
+      render :new, status: :bad_request
+      return
+    end
+
+    TraincontrolBridge.instance.runtime.register_locomotive(@locomotive.command_station_id, @locomotive.address)
+
+    redirect_to @locomotive
+  end
+
   def update
-    @locomotive.update_attributes(locomotive_params)
-    $traincontrol.update
+    @locomotive.decoder.update_attributes(locomotive_params)
+    TraincontrolBridge.instance.runtime.update
 
     head :ok
   end
@@ -19,7 +36,7 @@ class LocomotivesController < ApplicationController
   private
 
   def set_locomotive
-    @locomotive = $traincontrol.locomotives[params[:id].to_i]
+    @locomotive = Locomotive.find(params[:id])
   end
 
   def locomotive_params
@@ -34,5 +51,10 @@ class LocomotivesController < ApplicationController
           .tap { _1[:f2] = _1[:f2].to_i.positive? if _1.key?(:f2) }
           .tap { _1[:f3] = _1[:f3].to_i.positive? if _1.key?(:f3) }
           .tap { _1[:f4] = _1[:f4].to_i.positive? if _1.key?(:f4) }
+  end
+
+  def new_locomotive_params
+    params.require(:locomotive)
+          .permit(:command_station_id, :address, :name)
   end
 end

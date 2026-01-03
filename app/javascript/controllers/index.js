@@ -9,3 +9,6 @@ application.register("slider", SliderController)
 
 import FormThrottlerController from "./form_throttler_controller"
 application.register("form-throttler", FormThrottlerController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)

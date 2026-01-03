@@ -1,0 +1,42 @@
+<%= render ApplicationFrameComponent.new(
+             title: 'Command station',
+             current_tab: :setup,
+             container_class: 'bg-stone-200'
+           ) do %>
+
+  <div class="py-6 md:px-4">
+
+    <%= render HeaderComponent.new('Connection') %>
+    <%= render CardComponent.new do %>
+
+      <%= render FormGroupComponent.new(title: 'Control protocol & settings', description: 'Select the protocol your command station uses and set up the connection settings.') do %>
+        <div class="space-y-6">
+          <form data-turbo-action="replace">
+            <%= render InputComponent.new(label: 'Control protocol') do %>
+              <%= select_tag(
+                    'adapter',
+                    options_for_select(CommandStation::ADAPTERS.map { |id, adapter_class| [adapter_class.name, id] }, @command_station.adapter),
+                    include_blank: true,
+                    onchange: 'this.form.requestSubmit()',
+                    class: 'w-full'
+                  ) %>
+            <%- end %>
+          </form>
+
+          <%= form_with model: [:setup, @command_station] do |form| %>
+            <%= form.hidden_field :adapter %>
+            <%- if (adapter_configuration = @command_station.adapter_configuration).present? %>
+              <div class="mb-6">
+                <%= render "adapter_#{@command_station.adapter}_fields", form:, adapter_configuration: %>
+              </div>
+            <%- end %>
+
+            <%= form.submit class: 'button' %>
+          <%- end %>
+        </div>
+      <%- end %>
+
+    <%- end %>
+  </div>
+
+<%- end %>

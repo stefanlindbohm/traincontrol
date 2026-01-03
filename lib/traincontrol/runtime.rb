@@ -24,6 +24,7 @@ module Traincontrol
     end
 
     def register_command_station(id, command_station)
+      command_station.check_events
       @command_stations[id] = command_station
     end
 
@@ -32,8 +33,8 @@ module Traincontrol
         find_command_station(command_station_id).find_locomotive_decoder(address)
     end
 
-    def locomotives
-      @locomotives.values
+    def find_locomotive(address)
+      @locomotives[address]
     end
 
     def update

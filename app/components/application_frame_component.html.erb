@@ -1,19 +1,19 @@
-<div class="flex flex-col min-h-screen <%= @container_class %>">
+<div class="flex flex-col min-h-screen <%= @container_class %>" data-controller="modal">
   <div class="sticky top-0">
     <nav class="z-50 bg-gradient-to-b from-white/80 to-stone-50/80 backdrop-blur shadow-center pt-[env(safe-area-inset-top)] px-[env(safe-area-inset-left)]">
       <div class="h-16 px-4 flex items-center">
 
         <div class="hidden md:block pr-4 mr-4 border-r border-stone-300">
-          <ul class="h-8 flex space-x-0.5 bg-stone-200 rounded">
+          <ul class="h-8 flex space-x-0.5 bg-stone-200 rounded-md shadow-sm">
             <%- navigation_items.each do |(tab, title, icon, url, _)| %>
               <%- if tab == @current_tab %>
-                <li class="text-blue-800 bg-blue-200 rounded">
+                <li class="text-white bg-blue-600 rounded-md">
                   <%= link_to url, class: 'h-8 px-2 flex items-center', title: do %>
                     <%= helpers.inline_svg_tag(icon, class: 'size-5') %>
                   <%- end %>
                 </li>
               <%- else %>
-                <li class="text-gray-600">
+                <li class="text-gray-600 hover:text-blue-600 hover:bg-blue-200 rounded-md">
                   <%= link_to url, class: 'h-8 px-2 flex items-center', title: do %>
                     <%= helpers.inline_svg_tag(icon, class: 'size-5') %>
                   <%- end %>
@@ -24,7 +24,7 @@
         </div>
 
         <%- if @back_url.present? %>
-          <%= link_to @back_url, class: 'mr-4 flex items-center justify-center size-8 bg-stone-200 rounded' do %>
+          <%= link_to @back_url, class: 'mr-4 flex items-center justify-center size-8 button-secondary p-0' do %>
             <%= helpers.inline_svg_tag('heroicons/chevron-left') %>
           <%- end %>
         <%- elsif @current_tab == :setup && controller_path != 'setup/navigation' %>
@@ -37,28 +37,34 @@
           <h1 class="font-bold"><%= @title %></h1>
         </div>
 
+        <%- if actions? %>
+          <div>
+            <%= actions %>
+          </div>
+        <%- end %>
+
       </div>
     </nav>
   </div>
 
   <div class="grow flex px-[env(safe-area-inset-left)]">
     <%- if @current_tab == :setup %>
-      <div class="<%= 'hidden md:block ' unless @show_subnavigation_on_small_screens %>w-full md:w-60">
+      <div class="<%= 'hidden md:block ' unless @show_subnavigation_on_small_screens %>w-full md:w-60 flex-none">
         <nav class="min-h-full bg-white md:shadow-center py-4 ml-[calc(0px-env(safe-area-inset-left))] pl-[env(safe-area-inset-left)]">
           <ul class="mx-2 border-t border-b border-stone-200 md:border-0 divide-y divide-stone-200">
             <%- [
-                  ['General', setup_general_settings_path, '/setup/general']
+                  ['Command station', setup_command_station_path, '/setup/command-station']
                 ].each do |(title, url, base_url)| %>
               <%- if request.path.start_with?(base_url) %>
                 <li>
-                  <%= link_to url, class: 'p-2 md:bg-blue-800 md:text-white md:rounded flex items-center justify-between' do %>
+                  <%= link_to url, class: 'p-2 text-sm font-semibold md:bg-blue-600 md:text-white md:rounded-md flex items-center justify-between' do %>
                     <span><%= title %></span>
                     <%= helpers.inline_svg_tag 'heroicons/chevron-right', class: 'size-6 md:hidden' %>
                   <%- end %>
                 </li>
               <%- else %>
                 <li>
-                  <%= link_to url, class: 'p-2 md:hover:bg-stone-200 md:rounded flex items-center justify-between' do %>
+                  <%= link_to url, class: 'p-2 text-sm font-semibold md:hover:bg-blue-200 md:hover:text-blue-600 md:rounded flex items-center justify-between' do %>
                     <span><%= title %></span>
                     <%= helpers.inline_svg_tag 'heroicons/chevron-right', class: 'size-6 md:hidden' %>
                   <%- end %>
@@ -80,7 +86,7 @@
         <ul class="h-12 w-full flex justify-around space-x-0.5">
           <%- navigation_items.each do |(tab, title, icon, url, tab_bar_url)| %>
             <%- if tab == @current_tab %>
-              <li class="text-blue-800">
+              <li class="text-blue-600">
                 <%= link_to (tab_bar_url || url), class: 'size-12 flex flex-col items-center justify-center space-y-px' do %>
                   <%= helpers.inline_svg_tag(icon, class: 'size-6') %>
                   <span class="text-xs"><%= title %></span>
@@ -98,5 +104,11 @@
         </ul>
       </div>
     </nav>
+  </div>
+
+  <div class="fixed top-0 left-0 right-0 bottom-0 pt-8 md:p-20 flex items-end justify-center md:items-center bg-black/10" style="display: none;" data-modal-target="container" data-action="click->modal#close:self">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full md:w-auto">
+      <turbo-frame id="modal" target="_top" data-modal-target="frame"></turbo-frame>
+    </div>
   </div>
 </div>

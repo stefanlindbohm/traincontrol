@@ -54,10 +54,6 @@ Style/RedundantParentheses:
 Style/Lambda:
   EnforcedStyle: literal
 
-Style/GlobalVars:
-  AllowedVariables:
-    - $traincontrol
-
 # Rails
 
 Rails/Delegate:
