@@ -11,6 +11,7 @@ module Traincontrol
       @adapters = {}
       @command_stations = {}
       @locomotives = {}
+      @accessory_outputs = {}
 
       at_exit { stop }
       @run_loop = RunLoop.new(RUN_LOOP_INTERVAL) { tick }
@@ -21,6 +22,7 @@ module Traincontrol
       @command_stations.each_value(&:close)
       @command_stations = {}
       @locomotives = {}
+      @accessory_outputs = {}
     end
 
     def register_command_station(id, command_station)
@@ -33,8 +35,17 @@ module Traincontrol
         find_command_station(command_station_id).find_locomotive_decoder(address)
     end
 
+    def register_accessory_output(command_station_id, address)
+      @accessory_outputs[address] =
+        find_command_station(command_station_id).find_accessory_output(address)
+    end
+
     def find_locomotive(address)
       @locomotives[address]
+    end
+
+    def find_accessory_output(address)
+      @accessory_outputs[address]
     end
 
     def update

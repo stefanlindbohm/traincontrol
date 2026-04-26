@@ -22,6 +22,9 @@ class TraincontrolBridge
     Locomotive.find_each do |locomotive|
       runtime.register_locomotive(locomotive.command_station_id, locomotive.address)
     end
+    Turnout.find_each do |turnout|
+      runtime.register_accessory_output(turnout.command_station_id, turnout.address)
+    end
   rescue StandardError => e
     Rails.logger.error("Could not initialize command station due to error: #{e.message}")
     @current_command_station_id = nil

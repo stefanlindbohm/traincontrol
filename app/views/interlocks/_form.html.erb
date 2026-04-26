@@ -1,0 +1,31 @@
+<div id="new_interlock_form">
+  <%= form_for @interlock do |f| %>
+    <div class="pb-6 flex items-center">
+      <div class="grow">
+        <h1 class="font-bold">New interlock</h1>
+      </div>
+
+      <div>
+        <%= f.button 'Create', class: 'button' %>
+      </div>
+    </div>
+
+    <%- if @interlock.errors.any? %>
+      <ul class="text-sm bg-red-50 rounded px-3 py-2 mb-6">
+      <%- @interlock.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <%- end %>
+      </ul>
+    <%- end %>
+
+    <div class="space-y-6">
+      <%= render FormGroupComponent.new(title: 'Interlock') do %>
+        <div class="space-y-6">
+          <%= render InputComponent.new(label: 'Name') do %>
+            <%= f.text_field :name %>
+          <%- end %>
+        </div>
+      <%- end %>
+    </div>
+  <%- end %>
+</div>

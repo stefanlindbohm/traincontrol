@@ -1,0 +1,54 @@
+# frozen_string_literal: true
+
+module Traincontrol
+  module Decoders
+    class AccessoryOutput
+      ATTRIBUTES = %i[thrown active].freeze
+      DEFAULTS = {
+        thrown: false,
+        active: false
+      }.freeze
+
+      attr_reader :address, *ATTRIBUTES
+
+      def initialize(address)
+        @address = address
+        @changed_attributes = Set.new
+        set_attributes(DEFAULTS)
+      end
+
+      def changed?
+        @changed_attributes.any?
+      end
+
+      def clear_changes
+        @changed_attributes.clear
+      end
+
+      def update_attributes(attributes)
+        attributes.each do |attribute, value|
+          next if ATTRIBUTES.exclude?(attribute)
+
+          send("#{attribute}=", value)
+        end
+      end
+
+      def set_attributes(attributes)
+        attributes.each do |attribute, value|
+          next if ATTRIBUTES.exclude?(attribute)
+
+          instance_variable_set("@#{attribute}", value)
+        end
+      end
+
+      ATTRIBUTES.each do |attribute|
+        define_method "#{attribute}=" do |new_value|
+          return if instance_variable_get("@#{attribute}") == new_value
+
+          instance_variable_set("@#{attribute}", new_value)
+          @changed_attributes << attribute
+        end
+      end
+    end
+  end
+end

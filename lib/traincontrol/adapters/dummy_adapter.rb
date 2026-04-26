@@ -5,6 +5,7 @@ module Traincontrol
     class DummyAdapter
       def initialize
         @locomotive_decoders = {}
+        @accessory_outputs = {}
       end
 
       def close; end
@@ -16,11 +17,24 @@ module Traincontrol
         decoder
       end
 
+      def find_accessory_output(address)
+        output = Traincontrol::Decoders::AccessoryOutput.new(address)
+        @accessory_outputs[output.address] = output
+
+        output
+      end
+
       def update
         @locomotive_decoders.each_value do |decoder|
           next unless decoder.changed?
 
           decoder.clear_changes
+        end
+
+        @accessory_outputs.each_value do |output|
+          next unless output.changed?
+
+          output.clear_changes
         end
       end
 

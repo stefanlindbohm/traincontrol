@@ -9,6 +9,7 @@ module Traincontrol
       def initialize(serial_tty)
         @device = P50X::Device.new(serial_tty)
         @locomotive_decoders = {}
+        @accessory_outputs = {}
       end
 
       def close
@@ -23,12 +24,27 @@ module Traincontrol
         decoder
       end
 
+      def find_accessory_output(address)
+        output = Traincontrol::Decoders::AccessoryOutput.new(address)
+        read_accessory_output(output)
+        @accessory_outputs[output.address] = output
+
+        output
+      end
+
       def update
         @locomotive_decoders.each_value do |decoder|
           next unless decoder.changed?
 
           update_locomotive_decoder(decoder)
           decoder.clear_changes
+        end
+
+        @accessory_outputs.each_value do |output|
+          next unless output.changed?
+
+          update_accessory_output(output)
+          output.clear_changes
         end
       end
 
@@ -104,6 +120,32 @@ module Traincontrol
         @device.send(lok_command)
 
         raise UnexpectedStatusError, "Unexpected status: #{lok_command.status}" unless lok_command.status.ok?
+      end
+
+      def read_accessory_output(output)
+        status_command = P50X::Commands::XTrntSts.new(output.address)
+        @device.send(status_command)
+        if status_command.status.ok?
+          output.set_attributes(
+            thrown: !status_command.response[:closed]
+          )
+        else
+          raise UnexpectedStatusError, "Unexpected status: #{status_command.status}"
+        end
+      rescue => e
+        binding.debugger
+      end
+
+      def update_accessory_output(output)
+        turnout_command =
+          P50X::Commands::XTrnt.new(
+            output.address,
+            !output.thrown,
+            output.active
+          )
+        @device.send(turnout_command)
+
+        raise UnexpectedStatusError, "Unexpected status: #{turnout_command.status}" unless turnout_command.status.ok?
       end
     end
   end

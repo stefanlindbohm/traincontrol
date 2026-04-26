@@ -10,12 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_21_192447) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_26_074850) do
   create_table "command_stations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "adapter"
     t.json "adapter_options"
+  end
+
+  create_table "interlocks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "name"
   end
 
   create_table "locomotives", force: :cascade do |t|
@@ -25,6 +31,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_21_192447) do
     t.integer "address"
     t.text "name"
     t.index ["command_station_id"], name: "index_locomotives_on_command_station_id"
+  end
+
+  create_table "turnouts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "interlock_id"
+    t.integer "command_station_id"
+    t.integer "address"
+    t.text "name"
+    t.index ["command_station_id"], name: "index_turnouts_on_command_station_id"
+    t.index ["interlock_id"], name: "index_turnouts_on_interlock_id"
   end
 
 end

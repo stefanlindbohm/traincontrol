@@ -1,0 +1,40 @@
+<div id="new_turnout_form">
+  <%= form_for [@interlock, @turnout] do |f| %>
+    <%= f.hidden_field :command_station_id %>
+    <div class="pb-6 flex items-center">
+      <div class="grow">
+        <h1 class="font-bold">New turnout</h1>
+      </div>
+
+      <div>
+        <%= f.button 'Create', class: 'button' %>
+      </div>
+    </div>
+
+    <%- if @turnout.errors.any? %>
+      <ul class="text-sm bg-red-50 rounded px-3 py-2 mb-6">
+      <%- @turnout.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <%- end %>
+      </ul>
+    <%- end %>
+
+    <div class="space-y-6">
+      <%= render FormGroupComponent.new(title: 'Turnout') do %>
+        <div class="space-y-6">
+          <%= render InputComponent.new(label: 'Name') do %>
+            <%= f.text_field :name %>
+          <%- end %>
+        </div>
+      <%- end %>
+      <%= render FormGroupComponent.new(title: 'Decoder') do %>
+        <div class="space-y-6">
+          <%= render InputComponent.new(label: 'Address') do %>
+            <%= f.number_field :address, min: 0, step: 'any' %>
+          <%- end %>
+
+        </div>
+      <%- end %>
+    </div>
+  <%- end %>
+</div>

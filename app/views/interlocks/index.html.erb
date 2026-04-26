@@ -1,0 +1,52 @@
+<%= render ApplicationFrameComponent.new(
+             title: 'Interlocks',
+             current_tab: :signaller,
+             container_class: 'bg-stone-200'
+           ) do |frame| %>
+  <%- frame.with_actions do %>
+    <%= link_to new_interlock_path, class: 'button flex p-1', data: { action: 'modal#open' } do %>
+      <%= inline_svg_tag('heroicons/plus') %>
+    <%- end %>
+  <%- end %>
+
+  <div class="p-4 space-y-8">
+
+  <%- @interlocks.each do |interlock| %>
+    <div>
+      <h2 class="uppercase text-sm font-medium mb-2"><%= interlock.name %></h2>
+      <ul class="grid grid-cols-min grid-cols-[repeat(auto-fill,minmax(6rem,1fr))] gap-2">
+        <%- interlock.turnouts.each do |turnout| %>
+          <li>
+            <%= form_with url: interlock_turnout_path(interlock, turnout), method: :put, scope: :turnout do |f| %>
+              <div class="bg-stone-100 rounded-md pt-1 px-1">
+                <div class="flex flex-col w-full space-y-2 bg-white rounded-md shadow">
+                  <label class="inline-block grow h-12 text-center leading-[48px] rounded-md has-[:checked]:bg-green-800 has-[:checked]:text-white">
+                    <%= f.radio_button :thrown, 0, checked: !turnout.output.thrown, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+                    Closed
+                  </label>
+                  <label class="inline-block grow h-12 text-center leading-[48px] rounded-md has-[:checked]:bg-red-800 has-[:checked]:text-white">
+                    <%= f.radio_button :thrown, 1, checked: turnout.output.thrown, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
+                    Thrown
+                  </label>
+                </div>
+                <p class="text-center">
+                  <%= turnout.name %>
+                </p>
+              </div>
+            <%- end %>
+          </li>
+        <%- end %>
+
+        <li>
+          <%= link_to new_interlock_turnout_path(interlock), class: 'button w-full flex p-1 pr-2 space-x-2 items-center justify-center', data: { action: 'modal#open' } do %>
+            <%= inline_svg_tag('heroicons/plus') %>
+            Turnout
+          <%- end %>
+        </li>
+      </ul>
+    </div>
+  <%- end %>
+
+  </div>
+
+<%- end %>
