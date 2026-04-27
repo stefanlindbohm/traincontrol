@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_26_074850) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_27_132115) do
   create_table "command_stations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_26_074850) do
     t.integer "command_station_id"
     t.integer "address"
     t.text "name"
+    t.text "owner_name"
     t.index ["command_station_id"], name: "index_locomotives_on_command_station_id"
   end
 

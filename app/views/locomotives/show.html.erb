@@ -3,7 +3,7 @@
 <%- content_for(:title, @locomotive.name) %>
 
 <%= render ApplicationFrameComponent.new(
-             title: @locomotive.name,
+             title: "#{@locomotive.owner_name} #{@locomotive.name}",
              current_tab: :driver,
              back_url: root_path,
              container_class: 'bg-stone-200'

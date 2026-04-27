@@ -9,16 +9,20 @@
     <%- end %>
   <%- end %>
 
-  <div class="p-4">
+  <div class="p-4 space-y-8">
 
-    <h2 class="uppercase text-sm font-medium mb-2">All</h2>
-    <ul class="grid grid-cols-min grid-cols-[repeat(auto-fill,minmax(min(12rem,40%),1fr))] gap-2">
-      <%- @locomotives.each do |locomotive| %>
-        <li class="min-w-36">
-          <%= link_to locomotive.name, locomotive, class: "block p-2 bg-white rounded hover:text-blue-600" %>
-        </li>
-      <%- end %>
-    </ul>
+    <%- @locomotives.group_by(&:owner_name).each do |owner_name, locomotives| %>
+      <div>
+        <h2 class="uppercase text-sm font-medium mb-2"><%= owner_name || 'Other' %></h2>
+        <ul class="grid grid-cols-min grid-cols-[repeat(auto-fill,minmax(min(12rem,40%),1fr))] gap-2">
+          <%- locomotives.each do |locomotive| %>
+            <li class="min-w-36">
+              <%= link_to "#{locomotive.owner_name} #{locomotive.name}", locomotive, class: "block p-2 bg-white rounded hover:text-blue-600" %>
+            </li>
+          <%- end %>
+        </ul>
+      </div>
+    <%- end %>
 
   </div>
 

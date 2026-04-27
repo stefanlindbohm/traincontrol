@@ -55,6 +55,6 @@ class LocomotivesController < ApplicationController
 
   def new_locomotive_params
     params.require(:locomotive)
-          .permit(:command_station_id, :address, :name)
+          .permit(:command_station_id, :address, :name, :owner_name)
   end
 end
