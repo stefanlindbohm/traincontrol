@@ -15,7 +15,7 @@
     <div>
       <h2 class="uppercase text-sm font-medium mb-2"><%= interlock.name %></h2>
       <ul class="grid grid-cols-min grid-cols-[repeat(auto-fill,minmax(6rem,1fr))] gap-2">
-        <%- interlock.turnouts.each do |turnout| %>
+        <%- natural_sort_by(interlock.turnouts, &:name).each do |turnout| %>
           <li>
             <%= form_with url: interlock_turnout_path(interlock, turnout), method: :put, scope: :turnout do |f| %>
               <div class="bg-stone-100 rounded-md pt-1 px-1">
