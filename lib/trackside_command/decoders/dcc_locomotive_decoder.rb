@@ -2,10 +2,10 @@
 
 require 'throttler'
 
-module Traincontrol
+module TracksideCommand
   module Decoders
     class DCCLocomotiveDecoder
-      # TODO: This is here temporarily -- the Traincontrol module should not be dependent on Rails stuff
+      # TODO: This is here temporarily -- the TracksideCommand module should not be dependent on Rails stuff
       include Turbo::Broadcastable
 
       ATTRIBUTES = %i[speed direction emergency_stop lights f1 f2 f3 f4 f5 f6 f7 f8].freeze
@@ -72,7 +72,7 @@ module Traincontrol
 
       private
 
-      # TODO: This is here temporarily -- the Traincontrol module should not be
+      # TODO: This is here temporarily -- the TracksideCommand module should not be
       # dependent on app or Rails stuff
       def broadcast_refresh_throttled
         @broadcast_throttler.throttle do

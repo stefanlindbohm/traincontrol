@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Traincontrol
+module TracksideCommand
   module Adapters
     class DummyAdapter
       def initialize
@@ -11,14 +11,14 @@ module Traincontrol
       def close; end
 
       def find_locomotive_decoder(address)
-        decoder = Traincontrol::Decoders::DCCLocomotiveDecoder.new(address)
+        decoder = TracksideCommand::Decoders::DCCLocomotiveDecoder.new(address)
         @locomotive_decoders[decoder.address] = decoder
 
         decoder
       end
 
       def find_accessory_output(address)
-        output = Traincontrol::Decoders::AccessoryOutput.new(address)
+        output = TracksideCommand::Decoders::AccessoryOutput.new(address)
         @accessory_outputs[output.address] = output
 
         output

@@ -13,7 +13,7 @@ module CommandStationConfigurations
     end
 
     def create_adapter
-      Traincontrol::Adapters::P50XAdapter.new(serial_port) if serial_port.present?
+      TracksideCommand::Adapters::P50XAdapter.new(serial_port) if serial_port.present?
     end
 
     def available_serial_ports

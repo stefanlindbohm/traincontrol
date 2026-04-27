@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Traincontrol
+module TracksideCommand
   module Adapters
     class P50XAdapter
       class UnexpectedStatusError < StandardError; end
@@ -25,7 +25,7 @@ module Traincontrol
       end
 
       def find_accessory_output(address)
-        output = Traincontrol::Decoders::AccessoryOutput.new(address)
+        output = TracksideCommand::Decoders::AccessoryOutput.new(address)
         read_accessory_output(output)
         @accessory_outputs[output.address] = output
 
@@ -86,7 +86,7 @@ module Traincontrol
 
         case cfg_command.response[:protocol]
         when :dcc
-          Traincontrol::Decoders::DCCLocomotiveDecoder.new(
+          TracksideCommand::Decoders::DCCLocomotiveDecoder.new(
             address, speed_steps: cfg_command.response[:speed_steps]
           )
         else

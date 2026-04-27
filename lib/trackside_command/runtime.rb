@@ -4,7 +4,7 @@ module Traincontrol
   # Runtime is the main orchestrator of everything happening with command
   # stations, locomotives, accessories and simulations. Its main feature is the
   # `#tick` method that runs the world at a fixed interval.
-  class Runtime
+  class TracksideCommand
     RUN_LOOP_INTERVAL = 0.1
 
     def initialize

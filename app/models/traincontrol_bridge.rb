@@ -11,7 +11,7 @@ class TraincontrolBridge
 
   def restart
     runtime&.stop
-    @runtime = Traincontrol::Runtime.new
+    @runtime = TracksideCommand::Runtime.new
 
     command_station = CommandStation.first
     return if command_station.nil?

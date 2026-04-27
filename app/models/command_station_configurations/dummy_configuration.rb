@@ -9,7 +9,7 @@ module CommandStationConfigurations
     def initialize(_options); end
 
     def create_adapter
-      Traincontrol::Adapters::DummyAdapter.new
+      TracksideCommand::Adapters::DummyAdapter.new
     end
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Traincontrol
+module TracksideCommand
   module Decoders
     class AccessoryOutput
       ATTRIBUTES = %i[thrown active].freeze
