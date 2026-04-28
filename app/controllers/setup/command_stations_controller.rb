@@ -9,7 +9,7 @@ module Setup
 
     def update
       @command_station.update(command_station_params)
-      TraincontrolBridge.instance.restart
+      RuntimeBridge.shared.restart
 
       redirect_to action: :show
     end

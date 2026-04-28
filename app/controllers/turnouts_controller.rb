@@ -16,14 +16,14 @@ class TurnoutsController < ApplicationController
       return
     end
 
-    TraincontrolBridge.instance.runtime.register_accessory_output(@turnout.command_station_id, @turnout.address)
+    RuntimeBridge.shared.runtime.register_accessory_output(@turnout.command_station_id, @turnout.address)
 
     redirect_to interlocks_path
   end
 
   def update
     @turnout.output.update_attributes(turnout_params.merge(active: true))
-    TraincontrolBridge.instance.runtime.update
+    RuntimeBridge.shared.runtime.update
 
     head :ok
   end

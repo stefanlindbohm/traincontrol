@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TracksideCommand
+module TracksideSimulate
   # RunLoop calls a block on a separate thread at a given interval.
   class RunLoop
     attr_reader :interval, :stopped

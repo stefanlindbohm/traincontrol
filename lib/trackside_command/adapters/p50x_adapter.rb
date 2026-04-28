@@ -25,7 +25,7 @@ module TracksideCommand
       end
 
       def find_accessory_output(address)
-        output = TracksideCommand::Decoders::AccessoryOutput.new(address)
+        output = TracksideCommand::AccessoryOutput.new(address)
         read_accessory_output(output)
         @accessory_outputs[output.address] = output
 
@@ -84,14 +84,9 @@ module TracksideCommand
         @device.send(cfg_command)
         raise UnexpectedStatusError, "Unexpected status: #{cfg_command.status}" unless cfg_command.status.ok?
 
-        case cfg_command.response[:protocol]
-        when :dcc
-          TracksideCommand::Decoders::DCCLocomotiveDecoder.new(
-            address, speed_steps: cfg_command.response[:speed_steps]
-          )
-        else
-          raise UnsupportedProtocolError, "Locomotive at address #{address} uses unsupported protocol #{cfg_command.response[:protocol]}"
-        end
+        TracksideCommand::LocomotiveDecoder.new(
+          address, speed_steps: cfg_command.response[:speed_steps]
+        )
       end
 
       def read_locomotive_decoder(decoder)

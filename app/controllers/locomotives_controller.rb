@@ -21,14 +21,14 @@ class LocomotivesController < ApplicationController
       return
     end
 
-    TraincontrolBridge.instance.runtime.register_locomotive(@locomotive.command_station_id, @locomotive.address)
+    RuntimeBridge.shared.runtime.register_locomotive(@locomotive.command_station_id, @locomotive.address)
 
     redirect_to @locomotive
   end
 
   def update
     @locomotive.decoder.update_attributes(locomotive_params)
-    TraincontrolBridge.instance.runtime.update
+    RuntimeBridge.shared.runtime.update
 
     head :ok
   end

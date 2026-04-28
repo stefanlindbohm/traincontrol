@@ -7,6 +7,6 @@ class Locomotive < ApplicationRecord
   validates :address, presence: true
 
   def decoder
-    @decoder ||= TraincontrolBridge.instance.runtime.find_locomotive(address)
+    @decoder ||= RuntimeBridge.shared.runtime.find_locomotive(address)
   end
 end

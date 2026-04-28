@@ -11,14 +11,14 @@ module TracksideCommand
       def close; end
 
       def find_locomotive_decoder(address)
-        decoder = TracksideCommand::Decoders::DCCLocomotiveDecoder.new(address)
+        decoder = TracksideCommand::LocomotiveDecoder.new(address)
         @locomotive_decoders[decoder.address] = decoder
 
         decoder
       end
 
       def find_accessory_output(address)
-        output = TracksideCommand::Decoders::AccessoryOutput.new(address)
+        output = TracksideCommand::AccessoryOutput.new(address)
         @accessory_outputs[output.address] = output
 
         output

@@ -8,6 +8,6 @@ class Turnout < ApplicationRecord
   validates :address, presence: true
 
   def output
-    @output ||= TraincontrolBridge.instance.runtime.find_accessory_output(address)
+    @output ||= RuntimeBridge.shared.runtime.find_accessory_output(address)
   end
 end
