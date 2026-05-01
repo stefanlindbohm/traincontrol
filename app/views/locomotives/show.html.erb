@@ -10,7 +10,7 @@
            ) do %>
 
   <div class="mx-auto w-full max-w-lg p-4 flex flex-col space-y-4">
-    <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
+    <%= form_with url: locomotive_path, method: :put, scope: :locomotive, model: @locomotive.decoder do |f| %>
       <div class="flex flex-col space-y-1">
         <label class="uppercase text-sm font-medium">Direction</label>
         <div class="flex w-full space-x-2">
@@ -29,7 +29,7 @@
     <div class="flex space-x-2">
       <div class="grow flex-1">
 
-        <%= form_with url: locomotive_path, method: :put, scope: :locomotive, html: { 'data-controller': 'form-throttler' } do |f| %>
+        <%= form_with url: locomotive_path, method: :put, scope: :locomotive, model: @locomotive.decoder, html: { 'data-controller': 'form-throttler' } do |f| %>
           <div data-controller="slider" data-slider-max-value="<%= @locomotive.decoder.speed_steps - 1 %>">
             <%= f.hidden_field :speed, 'data-slider-target': 'field', 'data-action': 'form-throttler#submit turbo:morph-element->slider#updateFromField' %>
 
@@ -43,7 +43,7 @@
       </div>
       <div class="grow flex-1">
 
-        <%= form_with url: locomotive_path, method: :put, scope: :locomotive do |f| %>
+        <%= form_with url: locomotive_path, method: :put, scope: :locomotive, model: @locomotive.decoder do |f| %>
           <div class="grid gap-2 grid-cols-4">
             <label class="bg-white text-center leading-[48px] rounded-md has-[:checked]:bg-blue-800 has-[:checked]:text-white">
               <%= f.check_box :f1, onchange: 'this.form.requestSubmit()', class: 'hidden' %>
